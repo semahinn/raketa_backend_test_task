@@ -15,7 +15,7 @@ class Customer implements CustomerInterface
     ) {
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
