@@ -10,14 +10,14 @@ use Raketa\BackendTestTask\Domain\Entity\ProductInterface;
 use Raketa\BackendTestTask\Domain\Exception\ProductRepositoryException;
 use Raketa\BackendTestTask\Domain\Factory\ProductFactoryInterface;
 use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
-use Raketa\BackendTestTask\Domain\Row\RowValidator\ProductRowValidator;
+use Raketa\BackendTestTask\Domain\Row\RowValidator\ProductRowValidatorInterface;
 
 class ProductRepository implements ProductRepositoryInterface
 {
     public function __construct(
         protected Connection $connection,
         protected ProductFactoryInterface $factory,
-        protected ProductRowValidator $rowValidator) {
+        protected ProductRowValidatorInterface $rowValidator) {
     }
 
     public function getByUuid(string $uuid): ?ProductInterface

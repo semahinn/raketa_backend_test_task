@@ -1,10 +1,10 @@
 <?php
 
-namespace Raketa\BackendTestTask\Domain\Row\RowValidator;
+namespace Raketa\BackendTestTask\Infrastructure\Row\RowValidator;
 
-use Raketa\BackendTestTask\Domain\Exception\CategoryRepositoryException;
 use Raketa\BackendTestTask\Domain\Row\Exception\RowValidatorException;
 use Raketa\BackendTestTask\Domain\Row\RowResult\CategoryRowResult;
+use Raketa\BackendTestTask\Domain\Row\RowValidator\CategoryRowValidatorInterface;
 
 class CategoryRowValidator implements CategoryRowValidatorInterface {
 
