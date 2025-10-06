@@ -1,33 +1,24 @@
 <?php
 
-namespace Raketa\BackendTestTask\Application\Service;
+namespace Raketa\BackendTestTask\Infrastructure\Service;
 
 use Raketa\BackendTestTask\Application\DTO\DTO\AddProductInCartDTO;
 use Raketa\BackendTestTask\Application\DTO\DTO\GetCartDTO;
+use Raketa\BackendTestTask\Application\Service\CartServiceInterface;
 use Raketa\BackendTestTask\Domain\Aggregate\CartInterface;
 use Raketa\BackendTestTask\Domain\Exception\CartNotFoundException;
-use Raketa\BackendTestTask\Domain\Exception\CartRepositoryException;
 use Raketa\BackendTestTask\Domain\Exception\ProductNotFoundException;
-use Raketa\BackendTestTask\Domain\Exception\ProductRepositoryException;
 use Raketa\BackendTestTask\Domain\Repository\CartRepositoryInterface;
 use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
 use Raketa\BackendTestTask\Domain\ValueObject\CartItem;
-use Raketa\BackendTestTask\Infrastructure\Connector\Exception\ConnectorException;
 
-class CartService {
+class CartService implements CartServiceInterface {
 
     public function __construct(
         protected ProductRepositoryInterface $productRepository,
         protected CartRepositoryInterface $cartRepository) {
     }
 
-    /**
-     * @throws CartNotFoundException
-     * @throws CartRepositoryException
-     * @throws ConnectorException
-     * @throws ProductNotFoundException
-     * @throws ProductRepositoryException
-     */
     public function addProductInCart(AddProductInCartDTO $dto): CartInterface {
         $product = $this->productRepository->getByUuid($dto->productUuid);
         if (!$product)
@@ -40,7 +31,6 @@ class CartService {
         $cart->addItem(new CartItem(
             $dto->cartUuid,
             $product,
-            $product->getPrice(),
             $dto->quantity,
         ));
 
@@ -48,11 +38,6 @@ class CartService {
         return $cart;
     }
 
-    /**
-     * @throws CartNotFoundException
-     * @throws CartRepositoryException
-     * @throws ConnectorException
-     */
     public function getCartByUuid(GetCartDTO $dto): CartInterface {
         $cart = $this->cartRepository->getByUuid($dto->cartUuid);
         if (!$cart)

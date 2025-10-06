@@ -24,10 +24,10 @@ final readonly class ProductRowResult {
     public static function fromRow(array $row): self
     {
         return new ProductRowResult(
-            $row['id'] ?? null,
+            $row['id'] ?? 0,
             $row['uuid'] ?? '',
-            $row['isActive'] ?? false,
-            $row['categoryId'] ?? 0,
+            $row['is_active'] ?? false,
+            $row['category_id'] ?? 0,
             $row['name'] ?? '',
             $row['description'] ?? '',
             $row['thumbnail'] ?? '',

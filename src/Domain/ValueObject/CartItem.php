@@ -11,7 +11,6 @@ final readonly class CartItem
     public function __construct(
         private string $uuid,
         private ProductInterface $product,
-        private float $price,
         private int $quantity,
     ) {
     }
@@ -24,11 +23,6 @@ final readonly class CartItem
     public function getProduct(): ProductInterface
     {
         return $this->product;
-    }
-
-    public function getPrice(): float
-    {
-        return $this->price;
     }
 
     public function getQuantity(): int

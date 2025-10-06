@@ -6,16 +6,10 @@ namespace Raketa\BackendTestTask\Infrastructure\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Raketa\BackendTestTask\Domain\Entity\Product;
 use Raketa\BackendTestTask\Domain\Entity\ProductInterface;
-use Raketa\BackendTestTask\Domain\Exception\CategoryException;
-use Raketa\BackendTestTask\Domain\Exception\CategoryNotFoundException;
-use Raketa\BackendTestTask\Domain\Exception\CategoryRepositoryException;
-use Raketa\BackendTestTask\Domain\Exception\ProductException;
 use Raketa\BackendTestTask\Domain\Exception\ProductRepositoryException;
 use Raketa\BackendTestTask\Domain\Factory\ProductFactoryInterface;
 use Raketa\BackendTestTask\Domain\RawResult\ProductRowResult;
-use Raketa\BackendTestTask\Domain\Repository\CategoryRepositoryInterface;
 use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
 
 class ProductRepository implements ProductRepositoryInterface
@@ -27,7 +21,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getByUuid(string $uuid): ?ProductInterface
     {
-        $row = $this->connection->fetchOne(
+        $row = $this->connection->fetchAssociative(
           "SELECT * FROM product WHERE uuid = :uuid", ['uuid' => $uuid], ['uuid' => ParameterType::STRING]
         );
 

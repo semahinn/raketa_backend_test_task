@@ -18,7 +18,7 @@ final readonly class CategoryRowResult {
     public static function fromRow(array $row): self
     {
         return new CategoryRowResult(
-          $row['id'] ?? null,
+          $row['id'] ?? 0,
           $row['name'] ?? '');
     }
 

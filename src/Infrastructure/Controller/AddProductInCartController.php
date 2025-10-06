@@ -1,28 +1,26 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Raketa\BackendTestTask\Infrastructure\Controller;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use Raketa\BackendTestTask\Application\DTO\DTOValidator\GetCartDTOValidatorInterface;
+use Raketa\BackendTestTask\Application\DTO\DTOValidator\AddProductInCartDTOValidatorInterface;
 use Raketa\BackendTestTask\Application\DTO\Exception\DTOValidatorException;
 use Raketa\BackendTestTask\Application\Service\CartServiceInterface;
 use Raketa\BackendTestTask\Infrastructure\View\CartView;
 
-readonly class GetCartController
+readonly class AddProductInCartController
 {
     public function __construct(
-        private CartView $cartView,
         private CartServiceInterface $cartService,
+        private CartView $cartView,
         private LoggerInterface $logger,
-        private GetCartDTOValidatorInterface $dtoValidator,
+        private AddProductInCartDTOValidatorInterface $dtoValidator,
     ) {
     }
 
-    public function get(RequestInterface $request): ResponseInterface
+    public function add(RequestInterface $request): ResponseInterface
     {
         $response = new JsonResponse();
         $status = 200;
@@ -46,31 +44,29 @@ readonly class GetCartController
             );
         }
 
-        if ($dto) {
-            try {
-                $cart = $this->cartService->getCartByUuid($dto);
-                $response->getBody()->write(
-                    json_encode(
-                        [
-                            'cart' => $this->cartView->toArray($cart),
-                        ],
-                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-                    )
-                );
-            }
-            catch (\Exception $e) {
-                $status = $e->getCode();
-                $ui_message = "Не удалось получить данные из корзины";
-                $this->logger->error("Не удалось получить данные из корзины с uuid '{$dto->cartUuid}': " . $e->getMessage());
-                $response->getBody()->write(
-                    json_encode(
-                        [
-                            'message' => $ui_message
-                        ],
-                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-                    )
-                );
-            }
+        try {
+            $cart = $this->cartService->addProductInCart($dto);
+            $response->getBody()->write(
+                json_encode(
+                    [
+                        'cart' => $this->cartView->toArray($cart)
+                    ],
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                )
+            );
+        }
+        catch (\Exception $e) {
+            $status = $e->getCode();
+            $ui_message = "Товар не удалось добавить в корзину";
+            $this->logger->error("Товар с uuid '{$dto->productUuid}' не удалось добавить в корзину с uuid '{$dto->cartUuid}': " . $e->getMessage());
+            $response->getBody()->write(
+                json_encode(
+                    [
+                        'message' => $ui_message
+                    ],
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                )
+            );
         }
 
         return $response

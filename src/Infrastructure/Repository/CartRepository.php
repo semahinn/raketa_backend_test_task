@@ -7,8 +7,6 @@ namespace Raketa\BackendTestTask\Infrastructure\Repository;
 use Raketa\BackendTestTask\Domain\Aggregate\Cart;
 use Raketa\BackendTestTask\Domain\Aggregate\CartInterface;
 use Raketa\BackendTestTask\Domain\Exception\CartRepositoryException;
-use Raketa\BackendTestTask\Domain\Exception\CustomerRepositoryException;
-use Raketa\BackendTestTask\Domain\Exception\ProductRepositoryException;
 use Raketa\BackendTestTask\Domain\Repository\CartRepositoryInterface;
 use Raketa\BackendTestTask\Domain\Repository\CustomerRepositoryInterface;
 use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
@@ -33,12 +31,23 @@ class CartRepository implements CartRepositoryInterface
 
     public function save(CartInterface $cart, int $ttl = 60): void
     {
-        $this->connector->set($cart->getUuid(), $this->toArray($cart), $ttl);
+        try {
+            $this->connector->set($cart->getUuid(), $this->toArray($cart), $ttl);
+        }
+        catch (ConnectorException $e) {
+            throw new CartRepositoryException('Не удалось сохранить корзину', $e);
+        }
     }
 
     public function getByUuid(string $uuid): ?CartInterface
     {
-        $result = $this->connector->get($uuid);
+        try {
+            $result = $this->connector->get($uuid);
+        }
+        catch (ConnectorException $e) {
+            throw new CartRepositoryException('Не удалось получить данные корзины', $e);
+        }
+
         if (!$result) return null;
         return $this->fromArray($result);
     }
@@ -61,6 +70,8 @@ class CartRepository implements CartRepositoryInterface
      */
     protected function fromArray(array $values): CartInterface
     {
+        $this->validate($values);
+
         try {
             $customer = $this->customerRepository->getById($values['customer']);
         } catch (\Exception $e) {
@@ -81,9 +92,15 @@ class CartRepository implements CartRepositoryInterface
             if (!$product)
                 throw new CartRepositoryException("Товара с uuid '{$item[$key]['uuid']}' не существует");
 
-            $cart->addItem(new CartItem($item[$key]['uuid'], $product, $item[$key]['productUuid'], $item[$key]['quantity']));
+            $cart->addItem(new CartItem($item[$key]['uuid'], $product, $item[$key]['quantity']));
         }
 
         return $cart;
+    }
+
+    protected function validate(array $values)
+    {
+        // Предположим, что здесь происходит валидация данных (все ли ключи в наличии, какие можно
+        // использовать значения по-умолчанию т.д.), полученных с помощью этого репозитория
     }
 }
