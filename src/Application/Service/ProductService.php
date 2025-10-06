@@ -1,9 +1,8 @@
 <?php
 
-namespace Raketa\BackendTestTask\Infrastructure\Service;
+namespace Raketa\BackendTestTask\Application\Service;
 
 use Raketa\BackendTestTask\Application\DTO\DTO\GetProductsByCategoryDTO;
-use Raketa\BackendTestTask\Application\Service\ProductServiceInterface;
 use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
 
 class ProductService implements ProductServiceInterface {

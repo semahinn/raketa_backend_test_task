@@ -1,10 +1,9 @@
 <?php
 
-namespace Raketa\BackendTestTask\Infrastructure\Service;
+namespace Raketa\BackendTestTask\Application\Service;
 
 use Raketa\BackendTestTask\Application\DTO\DTO\AddProductInCartDTO;
 use Raketa\BackendTestTask\Application\DTO\DTO\GetCartDTO;
-use Raketa\BackendTestTask\Application\Service\CartServiceInterface;
 use Raketa\BackendTestTask\Domain\Aggregate\CartInterface;
 use Raketa\BackendTestTask\Domain\Exception\CartNotFoundException;
 use Raketa\BackendTestTask\Domain\Exception\ProductNotFoundException;
