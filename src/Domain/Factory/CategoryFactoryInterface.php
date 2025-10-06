@@ -3,7 +3,7 @@
 namespace Raketa\BackendTestTask\Domain\Factory;
 
 use Raketa\BackendTestTask\Domain\Entity\CategoryInterface;
-use Raketa\BackendTestTask\Domain\RawResult\CategoryRowResult;
+use Raketa\BackendTestTask\Domain\Row\RowResult\CategoryRowResult;
 
 interface CategoryFactoryInterface
 {

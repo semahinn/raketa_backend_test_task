@@ -7,7 +7,7 @@ use Raketa\BackendTestTask\Application\DTO\DTOValidator\AddProductInCartDTOValid
 
 class AddProductInCartDTOValidator implements AddProductInCartDTOValidatorInterface {
 
-    public function process(?array $input = []): AddProductInCartDTO
+    public function validate(array $input): AddProductInCartDTO
     {
         // По условию этого задания предполагается, что валидация УЖЕ есть в реальном проекте
         // Предположим, что здесь должна быть логика валидации массива $input для создания DTO

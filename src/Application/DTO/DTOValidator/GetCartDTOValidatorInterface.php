@@ -10,5 +10,5 @@ interface GetCartDTOValidatorInterface {
     /**
      * @throws DTOValidatorException
      */
-    public function process(): GetCartDTO;
+    public function validate(array $input): GetCartDTO;
 }

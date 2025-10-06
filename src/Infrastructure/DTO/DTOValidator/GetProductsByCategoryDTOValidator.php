@@ -7,7 +7,7 @@ use Raketa\BackendTestTask\Application\DTO\DTOValidator\GetProductsByCategoryDTO
 
 class GetProductsByCategoryDTOValidator implements GetProductsByCategoryDTOValidatorInterface {
 
-    public function process(?array $input = []): GetProductsByCategoryDTO
+    public function validate(array $input): GetProductsByCategoryDTO
     {
         // По условию этого задания предполагается, что валидация УЖЕ есть в реальном проекте
         // Предположим, что здесь должна быть логика валидации массива $input для создания DTO

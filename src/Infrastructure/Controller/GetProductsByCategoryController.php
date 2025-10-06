@@ -30,7 +30,7 @@ readonly class GetProductsByCategoryController
 
         $dto = null;
         try {
-            $dto = $this->dtoValidator->process($rawRequest);
+            $dto = $this->dtoValidator->validate($rawRequest);
         }
         catch (DTOValidatorException $e) {
             $status = $e->getCode();

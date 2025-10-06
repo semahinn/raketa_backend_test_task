@@ -9,14 +9,15 @@ use Doctrine\DBAL\ParameterType;
 use Raketa\BackendTestTask\Domain\Entity\ProductInterface;
 use Raketa\BackendTestTask\Domain\Exception\ProductRepositoryException;
 use Raketa\BackendTestTask\Domain\Factory\ProductFactoryInterface;
-use Raketa\BackendTestTask\Domain\RawResult\ProductRowResult;
 use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
+use Raketa\BackendTestTask\Domain\Row\RowValidator\ProductRowValidator;
 
 class ProductRepository implements ProductRepositoryInterface
 {
     public function __construct(
         protected Connection $connection,
-        protected ProductFactoryInterface $factory) {
+        protected ProductFactoryInterface $factory,
+        protected ProductRowValidator $rowValidator) {
     }
 
     public function getByUuid(string $uuid): ?ProductInterface
@@ -49,26 +50,11 @@ class ProductRepository implements ProductRepositoryInterface
     protected function fromRow(array $row): ProductInterface
     {
         try {
-            $rowResult = ProductRowResult::fromRow($row);
-        }
-        catch (\TypeError $e) {
-            throw new ProductRepositoryException("Получены некорректные данные о товаре из базы данных", $e);
-        }
-
-        try {
-            $this->validate($rowResult);
-            return $this->factory->createFromRowResult($rowResult);
+            return $this->factory->createFromRowResult($this->rowValidator->validate($row));
         }
         catch (\Exception $e) {
-            throw new ProductRepositoryException($e->getMessage(), $e);
+            throw new ProductRepositoryException('', $e);
         }
     }
 
-    protected function validate(ProductRowResult $rowResult): void
-    {
-        // Здесь должна быть валидация экземпляра $rowResult. Например, можно использовать symfony/validator.
-        // Тогда мы сможем проверить, опираясь на ограничения, прикреплённые к свойствам класса ProductRawResult
-        // ...
-        // throw new ProductRepositoryException("Значение свойства '$property' не прошло проверку");
-    }
 }

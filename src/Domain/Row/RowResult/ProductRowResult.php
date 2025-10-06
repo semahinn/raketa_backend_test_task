@@ -1,6 +1,6 @@
 <?php
 
-namespace Raketa\BackendTestTask\Domain\RawResult;
+namespace Raketa\BackendTestTask\Domain\Row\RowResult;
 
 use TypeError;
 

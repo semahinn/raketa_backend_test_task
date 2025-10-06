@@ -10,5 +10,5 @@ interface GetProductsByCategoryDTOValidatorInterface {
     /**
      * @throws DTOValidatorException
      */
-    public function process(): GetProductsByCategoryDTO;
+    public function validate(array $input): GetProductsByCategoryDTO;
 }

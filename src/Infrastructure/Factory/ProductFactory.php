@@ -8,8 +8,8 @@ use Raketa\BackendTestTask\Domain\Entity\Product;
 use Raketa\BackendTestTask\Domain\Entity\ProductInterface;
 use Raketa\BackendTestTask\Domain\Exception\CategoryNotFoundException;
 use Raketa\BackendTestTask\Domain\Factory\ProductFactoryInterface;
-use Raketa\BackendTestTask\Domain\RawResult\ProductRowResult;
 use Raketa\BackendTestTask\Domain\Repository\CategoryRepositoryInterface;
+use Raketa\BackendTestTask\Domain\Row\RowResult\ProductRowResult;
 
 class ProductFactory implements ProductFactoryInterface
 {

@@ -9,20 +9,22 @@ use Doctrine\DBAL\ParameterType;
 use Raketa\BackendTestTask\Domain\Entity\CategoryInterface;
 use Raketa\BackendTestTask\Domain\Exception\CategoryRepositoryException;
 use Raketa\BackendTestTask\Domain\Factory\CategoryFactoryInterface;
-use Raketa\BackendTestTask\Domain\RawResult\CategoryRowResult;
 use Raketa\BackendTestTask\Domain\Repository\CategoryRepositoryInterface;
+use Raketa\BackendTestTask\Domain\Row\Exception\RowValidatorException;
+use Raketa\BackendTestTask\Domain\Row\RowValidator\CategoryRowValidatorInterface;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
     public function __construct(
         protected Connection $connection,
-        protected CategoryFactoryInterface $factory) {
+        protected CategoryFactoryInterface $factory,
+        protected CategoryRowValidatorInterface $rowValidator) {
     }
 
     public function getById(int $id): ?CategoryInterface
     {
         $row = $this->connection->fetchOne(
-          "SELECT * FROM catefory WHERE id = :id", ['id' => $id], ['id' => ParameterType::STRING]
+          "SELECT * FROM category WHERE id = :id", ['id' => $id], ['id' => ParameterType::INTEGER]
         );
 
         if (empty($row)) {
@@ -38,21 +40,10 @@ class CategoryRepository implements CategoryRepositoryInterface
     protected function fromRow(array $row): CategoryInterface
     {
         try {
-            $rawResult = CategoryRowResult::fromRow($row);
+            return $this->factory->createFromRowResult($this->rowValidator->validate($row));
         }
-        catch (\TypeError $e) {
-            throw new CategoryRepositoryException("Получены некорректные данные о записи категории товаров из базы данных", $e);
+        catch (RowValidatorException $e) {
+            throw new CategoryRepositoryException('', $e);
         }
-
-        $this->validate($rawResult);
-        return $this->factory->createFromRowResult($rawResult);
-    }
-
-    protected function validate(CategoryRowResult $rowResult): void
-    {
-        // Здесь должна быть валидация экземпляра $rawResult. Например, можно использовать symfony/validator.
-        // Тогда мы сможем проверить, опираясь на ограничения, прикреплённые к свойствам класса CategoryRowResult
-        // ...
-        // throw new CategoryRepositoryException("Значение свойства '$property' не прошло проверку");
     }
 }

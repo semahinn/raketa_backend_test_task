@@ -2,7 +2,10 @@
 
 namespace Raketa\BackendTestTask\Application\DTO\Exception;
 
-class DTOValidatorException extends \Exception {
+use Throwable;
+use Exception;
+
+class DTOValidatorException extends Exception {
 
     public function __construct(string $message = "", ?Throwable $previous = null)
     {
